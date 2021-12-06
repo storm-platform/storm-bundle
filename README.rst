@@ -33,4 +33,4 @@ SpatioTemporal Open Research Manager - Docker
 About
 =====
 
-Docker images ready for Storm platform clients.
+Docker images ready for the Storm platform components.
