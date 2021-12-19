@@ -1,13 +1,13 @@
 ..
-    This file is part of storm-docker.
+    This file is part of storm-bundle.
     Copyright (C) 2021 INPE.
 
-    storm-docker is free software; you can redistribute it and/or modify it
+    storm-bundle is free software; you can redistribute it and/or modify it
     under the terms of the MIT License; see LICENSE file for more details.
 
 
 =============================================
-SpatioTemporal Open Research Manager - Docker
+SpatioTemporal Open Research Manager - Bundle
 =============================================
 
 .. image:: https://img.shields.io/badge/license-MIT-green
@@ -33,4 +33,11 @@ SpatioTemporal Open Research Manager - Docker
 About
 =====
 
-Docker images ready for the Storm platform components.
+Service package with the minimum configuration required to run the Storm platform. The following services are configured in this package:
+
+- Elasticsearch;
+- Kibana dashboard;
+- Celery workers;
+- PostgreSQL database;
+- RabbitMQ;
+- Redis.
