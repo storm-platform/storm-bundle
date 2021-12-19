@@ -1,0 +1,38 @@
+#
+# Copyright (C) 2021 Storm Project
+#
+# storm-bundle is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+
+# This file containers the general configurations used in both 
+# Storm Portal and Storm WS applications
+
+#
+# General definitions
+#
+
+# PostgreSQL
+POSTGRES_USER=storm
+POSTGRES_DB=storm-db
+POSTGRES_PASSWORD=storm
+
+#
+# SpatioTemporal Open Research Manager WS
+#
+
+# Reana server URL
+REANA_SERVER_URL=reana-server-url-here
+
+#
+# Invenio Framework general definitions
+#
+
+# uWSGI
+INVENIO_WSGI_PROXIES=2
+
+# Cache
+INVENIO_CACHE_TYPE=redis
+
+# Search engine
+INVENIO_SEARCH_ELASTIC_HOSTS=['elasticsearch:9200']

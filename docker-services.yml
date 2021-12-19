@@ -1,0 +1,79 @@
+#
+# Copyright (C) 2021 Storm Project
+#
+# storm-bundle is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+
+version: "2.2"
+services:
+    stormws:
+        image: stormproject/storm-ws:latest
+        restart: "unless-stopped"
+        env_file:
+          - config/app/ws/config-env
+          - config/app/general/config-env
+
+    portal:
+        image: stormproject/storm-portal:latest
+        restart: "unless-stopped"
+        env_file:
+          - config/app/portal/config-env
+          - config/app/general/config-env
+
+    cache:
+        image: redis
+        restart: "unless-stopped"
+        read_only: true
+        ports:
+            - "6379:6379"
+
+    rabbitmq:
+        image: rabbitmq:3.8-management
+        restart: "unless-stopped"
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+        restart: "unless-stopped"
+        environment:
+            - bootstrap.memory_lock=true
+            - discovery.type=single-node
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "localhost:9200/_cluster/health?wait_for_status=green" ]
+            interval: 30s
+            timeout: 30s
+            retries: 5
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        mem_limit: 1g
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana-oss:7.10.2
+        environment:
+            - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+            - "5601:5601"
+
+    database:
+        image: postgres:12.4
+        restart: "unless-stopped"
+        env_file:
+          - config/app/ws/config-env
+          - config/app/general/config-env
+        ports:
+            - "5432:5432"
+
+    nginx:
+        image: "nginx:1.20.2"
+        restart: "unless-stopped"
+        ports:
+          - "80"
+          - "443"
+

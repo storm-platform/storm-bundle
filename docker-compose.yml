@@ -1,0 +1,256 @@
+#
+# Copyright (C) 2021 Storm Project
+#
+# storm-bundle is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+
+version: "2.2"
+services:
+  #
+  # Base services
+  #
+  cache:
+    extends:
+      file: docker-services.yml
+      service: cache
+
+  elasticsearch:
+    extends:
+      file: docker-services.yml
+      service: elasticsearch
+
+  database:
+    extends:
+      file: docker-services.yml
+      service: database
+
+  kibana:
+      extends:
+          file: docker-services.yml
+          service: kibana
+
+  nginx:
+    extends:
+      file: docker-services.yml
+      service: nginx
+    volumes:
+      #
+      # NGINX: conf.d directory
+      #
+      - type: bind
+        source: ${PWD}/config/nginx/conf.d
+        target: /etc/nginx/conf.d/
+
+      #
+      # NGINX: nginx.conf file
+      #
+      - type: bind
+        source: ${PWD}/config/nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+
+      #
+      # NGINX: SSL Certificates
+      #
+      - type: bind
+        source: ${PWD}/config/nginx/certs/development.key
+        target: /etc/ssl/private/test.key
+      - type: bind
+        source: ${PWD}/config/nginx/certs/development.crt
+        target: /etc/ssl/certs/test.crt
+
+      #
+      # NGINX: Static files
+      #
+      - type: volume
+        source: portal_static_data
+        target: /opt/invenio/var/instance/static
+    ports:
+      - "80:80"
+      - "443:443"
+
+  #
+  # Storm Portal celery worker
+  #
+  portal-worker:
+    extends:
+      file: docker-services.yml
+      service: portal
+    command: [ "celery -A invenio_app.celery worker --loglevel=INFO" ]
+    depends_on:
+      elasticsearch:
+        condition: service_started
+      cache:
+        condition: service_started
+      database:
+        condition: service_started
+      rabbitmq-portal:
+        condition: service_started
+
+  #
+  # Storm Portal celery broker
+  #
+  rabbitmq-portal:
+    extends:
+      file: docker-services.yml
+      service: rabbitmq
+    ports:
+      - "5672"
+      - "15672"
+
+  #
+  # Storm Portal Rest API
+  #
+  portal-api:
+    extends:
+      file: docker-services.yml
+      service: portal
+    command: [ "uwsgi /opt/invenio/var/instance/uwsgi.ini" ]
+    ports:
+      - "5000"
+    volumes:
+
+      #
+      # Portal Rest API: Uploaded files
+      #
+      - type: volume
+        source: portal_uploaded_data
+        target: /opt/invenio/var/instance/data
+
+      #
+      # Portal Rest API: Archived files
+      #
+      - type: volume
+        source: portal_archived_data
+        target: /opt/invenio/var/instance/archive
+
+      #
+      # Portal Rest API: uWSGI configuration
+      #
+      - type: bind
+        source: ${PWD}/config/app/portal/uwsgi/uwsgi.rest.ini
+        target: /opt/invenio/var/instance/uwsgi.ini
+
+      #
+      # Portal Rest API: Invenio configuration
+      #
+      - type: bind
+        source: ${PWD}/config/app/portal/invenio.cfg
+        target: /opt/invenio/var/instance/invenio.cfg
+
+  #
+  # Storm Portal Frontend
+  #
+  portal-ui:
+    extends:
+      file: docker-services.yml
+      service: portal
+    command: [ "uwsgi /opt/invenio/var/instance/uwsgi.ini" ]
+    ports:
+      - "5000"
+    volumes:
+
+      #
+      # Portal UI: Static files
+      #
+      - type: volume
+        source: portal_static_data
+        target: /opt/invenio/var/instance/static
+
+      #
+      # Portal UI: Uploaded files
+      #
+      - type: volume
+        source: portal_uploaded_data
+        target: /opt/invenio/var/instance/data
+
+      #
+      # Portal UI: Archived files
+      #
+      - type: volume
+        source: portal_archived_data
+        target: /opt/invenio/var/instance/archive
+
+      #
+      # Portal UI: uWSGI configuration
+      #
+      - type: bind
+        source: ${PWD}/config/app/portal/uwsgi/uwsgi.ui.ini
+        target: /opt/invenio/var/instance/uwsgi.ini
+
+      #
+      # Portal UI: Invenio configuration
+      #
+      - type: bind
+        source: ${PWD}/config/app/portal/invenio.cfg
+        target: /opt/invenio/var/instance/invenio.cfg
+
+  #
+  # Storm WS celery worker
+  #
+  stormws-worker:
+    extends:
+      file: docker-services.yml
+      service: stormws
+    command: [ "celery -A invenio_app.celery worker --loglevel=INFO" ]
+    depends_on:
+      elasticsearch:
+        condition: service_started
+      cache:
+        condition: service_started
+      database:
+        condition: service_started
+      rabbitmq-ws:
+        condition: service_started
+
+  #
+  # Storm Portal celery broker
+  #
+  rabbitmq-ws:
+    extends:
+      file: docker-services.yml
+      service: rabbitmq
+    ports:
+      - "5672"
+      - "15672"
+
+  #
+  # Storm WS Rest API
+  #
+  stormws-api:
+    extends:
+      file: docker-services.yml
+      service: stormws
+    command: [ "uwsgi /opt/invenio/var/instance/uwsgi.ini" ]
+    ports:
+      - "5000"
+    volumes:
+      #
+      # Storm WS Rest API: Uploaded files
+      #
+      - type: volume
+        source: stormws_uploaded_data
+        target: /opt/invenio/var/instance/data
+
+      #
+      # Storm WS Rest API: uWSGI configuration
+      #
+      - type: bind
+        source: ${PWD}/config/app/ws/uwsgi/uwsgi.rest.ini
+        target: /opt/invenio/var/instance/uwsgi.ini
+
+      #
+      # Storm WS Rest API: Invenio configuration
+      #
+      - type: bind
+        source: ${PWD}/config/app/ws/invenio.cfg
+        target: /opt/invenio/var/instance/invenio.cfg
+
+volumes:
+  # Portal volumes
+  portal_static_data: null
+  portal_archived_data: null
+  portal_uploaded_data: null
+
+  # Storm WS volumes
+  stormws_uploaded_data: null
