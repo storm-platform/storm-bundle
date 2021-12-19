@@ -58,7 +58,7 @@ configure_stormws:
 	$(RUN_IN_CONTAINER) stormws-api invenio files location create --default default-location /opt/invenio/var/instance/data
 
 	@echo "Indexing!"
-	$(RUN_IN_CONTAINER) portal-api invenio index init
+	$(RUN_IN_CONTAINER) stormws-api invenio index init
 
 #
 # Configurations
