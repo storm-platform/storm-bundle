@@ -193,6 +193,30 @@ services:
       file: docker-services.yml
       service: stormws
     command: [ "celery -A invenio_app.celery worker --loglevel=INFO" ]
+    volumes:
+      #
+      # Docker (Connection socket)
+      #
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+
+      #
+      # Docker (Registry credentials - Requires `docker login`)
+      #
+      - type: bind
+        source: /$HOME/.docker/config.json
+        target: /root/.docker/config.json
+        read_only: true
+
+      #
+      # Storm WS Rest API: Uploaded files
+      #
+      - type: volume
+        source: stormws_uploaded_data
+        target: /opt/invenio/var/instance/data
+
     depends_on:
       elasticsearch:
         condition: service_started
