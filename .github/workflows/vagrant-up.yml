@@ -1,0 +1,38 @@
+#
+# Copyright (C) 2021 Storm Project
+#
+# storm-bundle is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
+
+name: vagrant-up
+
+on:
+  push:
+
+jobs:
+  vagrant-up:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v2
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-
+
+      - name: Show Vagrant version
+        run: vagrant --version
+
+      - name: Run vagrant up
+        run: vagrant up
+
+      - name: ssh into box after boot
+        run: vagrant ssh -c "echo 'running inside the vagrant box'"
+
+      - name: Run vagrant destroy
+        run: vagrant destroy --force
