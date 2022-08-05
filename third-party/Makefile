@@ -22,10 +22,16 @@ reana:   ## Configure the Reana reproducible analysis platform.
 	# kind settings
 	kind create cluster --config reana/kind/kind-localhost-30443.yaml
 
-	# configuration scripts
+	# prefetching images
 	sh reana/scripts/prefetch-images.sh
-	sh reana/scripts/create-admin-user.sh
 
+	# deploying reana
+	helm repo add reanahub https://reanahub.github.io/reana
+	helm repo update
+	helm install reana reanahub/reana --wait
+
+	# configuring default user
+	sh reana/scripts/create-admin-user.sh default reana john.doe@example.org mysecretpassword
 
 #
 # Documentation function (thanks for https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html)
