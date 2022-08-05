@@ -35,13 +35,15 @@ About
 
 Service package with the minimum configuration required to run the Storm platform. The following services are available:
 
-- Elasticsearch;
-- Kibana dashboard;
-- Celery workers;
-- PostgreSQL database;
-- RabbitMQ;
-- Redis.
+**Base services**
+
+- `Redis <https://redis.io/>`_;
+- `RabbitMQ <https://www.rabbitmq.com/>`_
+- `Elasticsearch <https://www.elastic.co/pt/elasticsearch/>`_
+- `Kibana <https://www.elastic.co/kibana/kibana-dashboard>`_
+- `Celery <http://celeryproject.org/>`_
+- `PostgreSQL <https://www.postgresql.org/>`_
 
 **Third-Party Platforms**
 
-- `Reana <https://reana.io/>`_.
+- `Reana <https://reana.io/>`_
