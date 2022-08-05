@@ -33,7 +33,7 @@ SpatioTemporal Open Research Manager - Bundle
 About
 =====
 
-Service package with the minimum configuration required to run the Storm platform. The following services are configured in this package:
+Service package with the minimum configuration required to run the Storm platform. The following services are available:
 
 - Elasticsearch;
 - Kibana dashboard;
@@ -41,3 +41,7 @@ Service package with the minimum configuration required to run the Storm platfor
 - PostgreSQL database;
 - RabbitMQ;
 - Redis.
+
+**Third-Party Platforms**
+
+- `Reana <https://reana.io/>`_.
