@@ -23,8 +23,8 @@ reana:   ## Configure the Reana reproducible analysis platform.
 	kind create cluster --config reana/kind/kind-localhost-30443.yaml
 
 	# configuration scripts
-	sh scripts/prefetch-images.sh
-	sh scripts/create-admin-user.sh
+	sh reana/scripts/prefetch-images.sh
+	sh reana/scripts/create-admin-user.sh
 
 
 #
