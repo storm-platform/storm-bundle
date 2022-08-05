@@ -11,7 +11,7 @@ SpatioTemporal Open Research Manager - Bundle
 =============================================
 
 .. image:: https://img.shields.io/badge/license-MIT-green
-        :target: https://github.com/storm-platform/storm-docker/blob/master/LICENSE
+        :target: https://github.com/storm-platform/storm-bundle/blob/master/LICENSE
         :alt: Software License
 
 .. image:: https://img.shields.io/badge/lifecycle-maturing-blue.svg
@@ -37,7 +37,7 @@ Service package with the minimum configuration required to run the Storm platfor
 
 **Base services**
 
-- `Redis <https://redis.io/>`_;
+- `Redis <https://redis.io/>`_
 - `RabbitMQ <https://www.rabbitmq.com/>`_
 - `Elasticsearch <https://www.elastic.co/pt/elasticsearch/>`_
 - `Kibana <https://www.elastic.co/kibana/kibana-dashboard>`_
