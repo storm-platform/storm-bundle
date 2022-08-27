@@ -28,9 +28,11 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-  config.vm.network "forwarded_port", guest: 443, host: 443
-  config.vm.network "forwarded_port", guest: 30443, host: 30443
-  config.vm.network "forwarded_port", guest: 5432, host: 5432
+  config.vm.network "forwarded_port", guest: 8443, host: 8443   # Application (Storm Portal and Storm WS)
+  config.vm.network "forwarded_port", guest: 5432, host: 5432   # Database
+  config.vm.network "forwarded_port", guest: 9200, host: 9200   # Elasticsearch
+  config.vm.network "forwarded_port", guest: 5601, host: 5601   # Kibana
+  config.vm.network "forwarded_port", guest: 30443, host: 30443 # Reana
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
